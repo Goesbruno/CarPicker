@@ -1,6 +1,4 @@
-package com.goesbruno.carpicker.vehicle.parts.seat
-
-import com.goesbruno.carpicker.vehicle.parts.Part
+package com.goesbruno.carpicker.vehicle.parts
 
 class Seat private constructor(
     val uphosltery: Uphosltery
@@ -16,8 +14,8 @@ class Seat private constructor(
     enum class Uphosltery {CLOTH, REXINE, LEATHER}
 
     class Factory (val uphosltery: Uphosltery){
-        fun createSeat(): Seat{
-            return Seat(uphosltery)
+        fun createSeats(numSeats: Int): List<Seat> {
+            return generateSequence { Seat(uphosltery) }.take(numSeats).toList()
         }
     }
 

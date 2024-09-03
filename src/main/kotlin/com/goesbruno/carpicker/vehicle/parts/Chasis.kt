@@ -1,20 +1,11 @@
 package com.goesbruno.carpicker.vehicle.parts
 
-import com.goesbruno.carpicker.vehicle.parts.seat.Seat
-
-class Chasis(
-    val type: Type,
-    val seatFactory: Seat.Factory
+class Chasis private constructor (
+    private val type: Type,
+    private val seats: List<Seat>
 ) : Part {
-    val numSeats = when(type){
-        Type.HATCHBACK -> 4
-        Type.SEDAN -> 5
-        Type.SUV -> 7
-        Type.PICKUP -> 5
-    }
-    val seats: List<Seat> = generateSequence {
-        seatFactory.createSeat()
-    }.take(numSeats).toList()
+
+
     override val selfPrice: Int
         get() = when(type){
             Type.HATCHBACK -> 10000
@@ -26,4 +17,32 @@ class Chasis(
         get() = selfPrice + seats.sumOf { it.totalCost }
 
     enum class Type {HATCHBACK, SEDAN, SUV, PICKUP}
+
+    class Builder {
+        private lateinit var chasisType: Type
+        private var seatFactory: Seat.Factory = Seat.Factory(Seat.Uphosltery.CLOTH)
+
+        fun setChasisType(chasisType: Type): Builder {
+            this.chasisType = chasisType
+            return this
+        }
+
+        fun setSeatFactory(seatFactory: Seat.Factory): Builder {
+            this.seatFactory = seatFactory
+            return this
+        }
+
+        fun build(): Chasis{
+            val numSeats = when(chasisType){
+                Type.HATCHBACK -> 4
+                Type.SEDAN -> 5
+                Type.SUV -> 7
+                Type.PICKUP -> 5
+            }
+            return  Chasis(
+                chasisType,
+                seatFactory.createSeats(numSeats)
+            )
+        }
+    }
 }

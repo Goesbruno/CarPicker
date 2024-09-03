@@ -1,6 +1,4 @@
-package com.goesbruno.carpicker.vehicle.parts.wheel
-
-import com.goesbruno.carpicker.vehicle.parts.Part
+package com.goesbruno.carpicker.vehicle.parts
 
 class Wheel private constructor (
     val type: Type
@@ -17,12 +15,13 @@ class Wheel private constructor (
     enum class Type {STEEL, ALLOY, CARBONFIBER}
 
     class Factory(
-        val type: Wheel.Type
+        val type: Type
     ) {
 
-        fun createWheel(): Wheel{
-            return Wheel(type)
+        fun createWheels(numWheels: Int): List<Wheel>{
+           return generateSequence {
+                Wheel(type)
+            }.take(numWheels).toList()
         }
-
     }
 }
